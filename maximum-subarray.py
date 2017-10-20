@@ -4,14 +4,25 @@ Find the contiguous subarray within an array (containing at least one number) wh
 For example, given the array [-2,1,-3,4,-1,2,1,-5,4],
 the contiguous subarray [4,-1,2,1] has the largest sum = 6.
 
-click to show more practice.
 More practice:
 If you have figured out the O(n) solution, try coding another solution using the divide and conquer approach, which is more subtle.
 """
+
 # O(n) runtime, O(1) space DP
 """
 f(k) max sum of subarray ending at index k
 f(k) = max(f(k-1)+A[k], A[k])
+
+1. State
+  local[i] max value if contains x[i]
+  global[i] global value at index i
+2. Function
+  local[i] = Max(nums[i], local[i-1]+nums[i])
+  global[i] = Max(local[i], global[i-1])
+3. Intialization
+  local[0] = global[0] = nums[0]
+4. Answer
+  global[i-1]
 """
 class Solution(object):
     def maxSubArray(self, nums):
@@ -66,8 +77,6 @@ class Solution(object):
             maxsuffixsum = max(maxsuffixsum, suffixsum)
         s = max(maxsuffixsum + nums[m] + maxprefixsum, lmaxsum, rmaxsum)
         return s
-
-
 
 t = [2, 1, -3, 4, -1, 2, 1, -5, 4]
 r = Solution().maxSubArray(t)

@@ -51,5 +51,43 @@ class Solution(object):
                     max_area = max(max_area, area)
         return max_area
 
+"""
+State: 
+    f[i][j] = max side length of a square that lower right (i,j)
+function:
+  if matrix i,j == 1
+    f(i,j) = min(f(i-1,j-1), f(i,j-1), f(i-1,j)) + 1
+  else
+    f(i,j) = 0
+Intialization
+  f(i,0) = matrix(i,0)
+  f(0,j) = matrix(0,j)
+Answer
+  max(f(i,j))
+"""
+
+class Solution(object):
+    def maximalSquare(self, matrix):
+        """
+        :type matrix: List[List[str]]
+        :rtype: int
+        """
+        m = len(matrix)
+        n = len(matrix[0]) if len(matrix) > 0 else 0
+        dp = [[0 for j in range(n)] for i in range(m)]
+        max_side = 0
+        for i in range(n):
+            dp[0][i] = 1 if matrix[0][i] == "1" else 0
+        for i in range(m):
+            dp[i][0] = 1 if matrix[i][0] == "1" else 0
+            if any(dp[i]):
+                max_side = 1
+        for i in range(1, m):
+            for j in range(1, n):
+                if matrix[i][j] == "1":
+                    dp[i][j] = min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]) + 1
+                    max_side = max(max_side, dp[i][j])
+        return max_side ** 2
+
 t = ["10100","10111","11111","10010"]
 r = Solution().maximalSquare(t)

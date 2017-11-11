@@ -1,5 +1,10 @@
 """
-Given a set of candidate numbers (C) (without duplicates) and a target number (T), find all unique combinations in C where the candidate numbers sums to T.
+Combination Sum
+https://leetcode.com/problems/combination-sum/
+
+Given a set of candidate numbers (C) (without duplicates)
+and a target number (T), find all unique combinations in C 
+where the candidate numbers sums to T.
 
 The same repeated number may be chosen from C unlimited number of times.
 
@@ -13,6 +18,8 @@ A solution set is:
   [2, 2, 3]
 ]
 """
+
+
 class Solution(object):
     def combinationSum(self, candidates, target):
         """
@@ -21,16 +28,19 @@ class Solution(object):
         :rtype: List[List[int]]
         """
         result = []
-        if target < min(candidates):
-            return result
-        for num, i in enumerate(candidates):
-            if i == target:
-                result.append([i])
-            r = self.combinationSum(candidates[num:], target - i)
-            if r:
-                for item in r:
-                    result.append([i] + item)
+
+        def dfs(candidates, target, path):
+            if target < 0:
+                return
+            if target == 0:
+                result.append(path)
+            for i in range(len(candidates)):
+                dfs(candidates[i:], target -
+                    candidates[i], path + [candidates[i]])
+        dfs(candidates, target, [])
         return result
 
-t = [2,3,6,7]
+
+t = [2, 3, 6, 7]
 r = Solution().combinationSum(t, 7)
+print(r)

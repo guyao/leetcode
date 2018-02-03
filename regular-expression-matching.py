@@ -18,6 +18,26 @@ isMatch("aa", ".*") → true
 isMatch("ab", ".*") → true
 isMatch("aab", "c*a*b") → true
 """
+
+# Approach 1 Recursion
+class Solution:
+    def isMatch(self, s, p):
+        """
+        :type s: str
+        :type p: str
+        :rtype: bool
+        """
+        if not p:
+            return not s
+
+        first_match = bool(s) and p[0] in {s[0], '.'}
+
+        if len(p) >= 2 and p[1] == '*':
+            return self.isMatch(s, p[2:]) or first_match and self.isMatch(s[1:], p)
+        else:
+            return first_match and self.isMatch(s[1:], p[1:])
+
+
 class Solution0(object):
     def isMatch(self, s, p):
         """
@@ -31,7 +51,6 @@ class Solution0(object):
         for i, v in enumerate(s):
             if pi >= len(p):
                 return False
-            print(i,v, p[pi], preceding_element)
             if p[pi] == "*":
                 if preceding_element is None:
                     return False
@@ -50,7 +69,7 @@ class Solution0(object):
 
 
 
-class Solution(object):
+class Solution0(object):
     def isMatch(self, s, p):
         """
         :type s: str
@@ -81,16 +100,11 @@ class Solution(object):
         return dp[m][n]
 
 
-
-
-
-
-
 # assert Solution().isMatch("aa","a") == False
 # assert Solution().isMatch("aa","aa") == True
 # assert Solution().isMatch("aaa","aa") == False
 # assert Solution().isMatch("aaa","aa") == False
-assert Solution().isMatch("aa", "a*") == True
+# assert Solution().isMatch("aa", "a*") == True
 # assert Solution().isMatch("aa", ".*") == True
 # assert Solution().isMatch("ab", ".*") == True
 # assert Solution().isMatch("aab", "c*a*b") == True

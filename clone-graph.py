@@ -4,6 +4,9 @@ class UndirectedGraphNode:
         self.label = x
         self.neighbors = []
 
+    def __repr__(self):
+        return str(self.label)
+
 # Depth First traversal
 """
 Note that the graph could contain cycles, for example a node could have a neighbor that points back to it. Therefore, we should use a map that records each node’s copy to avoid infinite recursion.

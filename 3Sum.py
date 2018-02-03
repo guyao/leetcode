@@ -14,6 +14,11 @@ A solution set is:
 ]
 """
 
+"""
+Note:
+1. avoid duplicate
+"""
+
 
 class Solution(object):
     def threeSum(self, nums):
@@ -21,54 +26,31 @@ class Solution(object):
         :type nums: List[int]
         :rtype: List[List[int]]
         """
-        r = []
-        if len(nums) < 3:
-            return r
-        end = len(nums) - 1
-        numlist = sorted(nums)
-        for i, v in enumerate(numlist):
-            if (i > 0) and numlist[i] == numlist[i - 1]:
-                continue
-            if i + 1 < end:
-                other = self.twoSum(numlist, -v, i + 1, end)
-                for ans in other:
-                    r.append([v] + ans)
-        return r
+        nums = sorted(nums)
+        res = []
+        def twosum(nums, st, ed, target):
+            l = st
+            r = ed
+            while l < r:
+                s = nums[l] + nums[r]
+                if s == target:
+                    res.append([n, nums[l], nums[r]])
+                    l += 1
+                    while l < r and nums[l] == nums[l-1]:
+                        l += 1
+                    r -= 1
+                    while l < r and nums[r] == nums[r+1]:
+                        r -= 1
+                elif s < target:
+                    l += 1
+                elif s > target:
+                    r -= 1
 
-    def twoSum(self, nums, key, start, end):
-        p = start
-        q = end
-        r = []
-        lastp = nums[start]
-        lastq = nums[end]
-        while p < q:
-            if (p > start) and (nums[p] == lastp):
-                p += 1
+        for i in range(len(nums)):
+            if i != 0 and nums[i] == nums[i-1]:
                 continue
-            if (q < end) and (nums[q] == lastq):
-                q -= 1
-                continue
-            s = nums[p] + nums[q]
-            print("p", key, s)
-            if s < key:
-                p += 1
-            elif s > key:
-                q -= 1
-            else:
-                r.append([nums[p], nums[q]])
-                lastp = nums[p]
-                lastq = nums[q]
-                p += 1
-                q -= 1
-        return r
+            n = nums[i]
+            twosum(nums, i + 1, len(nums) - 1, -n)
+        return res
 
 
-S = [-1, 0, 1, 2, -1, -4]  # expected [[-1, 0, 1], [-1, -1, 2]]
-S2 = [-2, 0, 0, 2, 2]  # expected [[-2, 0, 2]]
-S3 = [0, 0, 0]  # expect [[0, 0, 0]]
-S4 = [-1, 0, 1, 2, -1, -4]  # expect [[-1,-1,2],[-1,0,1]]
-S5 = [-4, -2, -2, -2, 0, 1, 2, 2, 2, 3, 3, 4, 4, 6, 6]
-S6 = [-1, 0, 1]
-S7 = [-4, -2, -2, -2, 0, 1, 2, 2, 2, 3, 3, 4, 4, 6, 6]
-S8 = [0, -4, -1, -4, -2, -3, 2]
-# expect [[-4,-2,6],[-4,0,4],[-4,1,3],[-4,2,2],[-2,-2,4],[-2,0,2]]

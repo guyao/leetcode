@@ -57,6 +57,8 @@ class Solution(object):
                 continue
         return res
 
+# Union Find
+
 
 t = [100, 4, 200, 1, 3, 2]
 t = [1, 2, 0, 1] #3

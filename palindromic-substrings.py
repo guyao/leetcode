@@ -23,3 +23,32 @@ class Solution(object):
             helper(i, i)
             helper(i, i + 1)
         return count
+
+
+class Solution:
+    def countSubstrings(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+        n = len(s)
+        dp = [[False]*n for _ in range(n)]
+        res = 0
+
+        for i in range(n):
+            dp[i][i] = True
+            res += 1
+
+        for i in range(n - 1):
+            if s[i] == s[i+1]:
+                dp[i][i+1] = True
+                res += 1
+
+        for gap in range(2, n):
+            for i in range(n - gap):
+                j = i + gap
+                if s[i] == s[j] and dp[i+1][j-1]:
+                    dp[i][j] = True
+                    res += 1
+
+        return res

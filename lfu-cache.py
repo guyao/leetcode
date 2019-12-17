@@ -221,3 +221,103 @@ cache.get(1)
 cache.get(3)
 cache.get(4)
 """
+
+
+
+
+# HashMap + Double Linked List
+
+class Node:
+    def __init__(self, key, value):
+        self.key = key
+        self.value = value
+        self.frequency = 1
+
+    def __repr__(self):
+        return "Node({})".format((self.key, self.value))
+
+class DoubleLinkedList:
+    def __init__(self):
+        self.head = Node(None, None)
+        self.tail = Node(None, None)
+        self.head.next = self.tail
+        self.tail.prev = self.head
+
+    def remove(self, node):
+        p = node.prev
+        n = node.next
+        p.next = n
+        n.prev = p
+
+    def back(self):
+        return self.tail.prev
+
+    def pop_back(self):
+        node = self.back()
+        self.remove(node)
+        return node
+
+    def push_front(self, node):
+        p = self.head
+        n = self.head.next
+
+        p.next = node
+        node.prev = p
+
+        n.prev = node
+        node.next = n
+
+    def empty(self):
+        return self.head.next is self.tail
+
+    def __repr__(self):
+        h = self.head.next
+        r = []
+        while h is not self.tail:
+            r.append(h)
+            h = h.next
+        return str(r)
+    
+
+class LFUCache:
+    def __init__(self, capacity):
+        self.capacity = capacity
+        self.least_frequency = 1
+        self.key_node = {}
+        self.frequency_node = collections.defaultdict(DoubleLinkedList)
+
+
+    def get(self, key):
+        if key not in self.key_node:
+            return -1
+        self.update(self.key_node[key])
+        return self.key_node[key].value
+
+    def put(self, key, value):
+        if self.capacity == 0: return
+        if key in self.key_node:
+            node = self.key_node[key]
+            node.value = value
+            self.update(node)
+            return
+        else:
+            if len(self.key_node) == self.capacity:
+                to_remove = self.frequency_node[self.least_frequency].pop_back()
+                del self.key_node[to_remove.key]
+            node = Node(key, value)
+            self.frequency_node[node.frequency].push_front(node)
+            self.key_node[key] = node
+            self.least_frequency = 1
+
+    def update(self, node):
+        freq = node.frequency
+        new_freq = freq + 1
+
+        self.frequency_node[freq].remove(node)
+        node.frequency += 1
+
+        if self.frequency_node[freq].empty() and freq == self.least_frequency:
+            del self.frequency_node[freq]
+            self.least_frequency += 1
+
+        self.frequency_node[new_freq].push_front(node)

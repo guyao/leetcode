@@ -8,35 +8,22 @@ and [3,4,-1,1] return 2.
 Your algorithm should run in O(n) time and uses constant space.
 """
 
-class Solution(object):
+class Solution:
     def firstMissingPositive(self, nums):
         """
         :type nums: List[int]
         :rtype: int
         """
-        h = []
-        import heapq
-        s = set()
-        for i in nums:
-            if i > 0:
-                s.add(i)
-        for i in s:
-            heapq.heappush(h, i)
-        start = 0
-        p = start
-        while len(h) != 0:
-            p = heapq.heappop(h)
-            if p == start + 1:
-                start = start + 1
-            else:
-                return start + 1
-        return p + 1
-
+        n = len(nums)
+        for i in range(len(nums)):
+            while (1 <= nums[i] <= n) and (nums[i] != i + 1) and (nums[i] != nums[nums[i] - 1]):
+                j = nums[i] - 1
+                nums[i], nums[j] = nums[j], nums[i]
+        for i in range(len(nums)):
+            if nums[i] != i + 1:
+                return i + 1
+        return n + 1
 
 t = [3, 4, -1 ,1]
-t = [0, 1, 2]
-t = [0]
-t = []
-t = [1]
-t = [0, 2, 2, 1, 1]
+t = [1, 1]
 r = Solution().firstMissingPositive(t)
